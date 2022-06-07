@@ -1,6 +1,7 @@
-package server;
+// package server;
 
 import java.net.ServerSocket;
+import java.net.Socket;
 
 public class Server {
 
@@ -8,14 +9,22 @@ public class Server {
 		
 		int port = 5000;
 		
-		try {
-			ServerSocket serverSocket = new ServerSocket(port);
-			System.out.println("[+] Escutando na porta 5000!");
+		try ( ServerSocket serverSocket = new ServerSocket(port) ){
+			
+			System.out.println("[+] Server listening on port " + port + "!");
+			System.out.println("[+] Server is wainting for connections...");
 				
 			while ( true ) {
-				HandleClient t = new HandleClient(serverSocket.accept());
+				
+				// Wait for client connection
+				Socket connectionSocket = serverSocket.accept();
+				// Show IP address from client
+				System.out.println("[+] Client " + serverSocket.getInetAddress().getHostAddress() + " conected!");
+				// Open a thread for connected client
+				HandleClient t = new HandleClient(connectionSocket);
 				t.start();
 			}
+			
 		} catch (Exception e) {
 				System.out.println("Ops! Ocorreu um erro na conexão!");
 		}
