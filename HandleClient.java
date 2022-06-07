@@ -1,9 +1,9 @@
 package server;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.net.Socket;
+import java.util.Scanner;
 
 public class HandleClient extends Thread {
 	
@@ -15,27 +15,45 @@ public class HandleClient extends Thread {
 	
 	@Override
 	public void run() {
-		System.out.println("Thread " + this.getId() + ": Cliente conectado!");
 		
-		InputStreamReader data;
+		System.out.println("[+] " + Thread.currentThread().getName());
+		
 		try {
-			data = new InputStreamReader(clientSocket.getInputStream());
+			// Receive from client
+			Scanner recv = new Scanner(clientSocket.getInputStream());
+			PrintStream out = new PrintStream(clientSocket.getOutputStream());
 			
-			BufferedReader message = new BufferedReader(data);
-
-			System.out.println(message.readLine());
+			while(recv.hasNextLine()) {
+				int msgChegadaCliente = recv.nextInt();
+				System.out.println("[+] " + Thread.currentThread().getName() + ": received the number " + msgChegadaCliente);
+				String msgResposta = isPrime(msgChegadaCliente);
+				out.println(msgResposta);
+			}
 			
-			Thread.sleep(15000);
+			// Close data input and output stream
+			recv.close();
 			
+			// Close socket
 			clientSocket.close();
 			
-			System.out.println("Cliente desconectado!");
+			System.out.println("[+] Client disconected!");
 			
 		} catch (IOException e) {
 			e.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
 		}
 		
+	}
+	
+	public static String isPrime(int num) {
+		if (num == 1) {
+			return "is not";
+		}
+		
+		for ( int i = 2; i < num ; i++ ) {
+			if ( num % i == 0) {
+				return "is not";
+			}
+		}
+		return "is";
 	}
 }
