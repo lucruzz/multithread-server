@@ -1,0 +1,10 @@
+The number 950507 is prime!
+The number 610842 is not prime!
+The number 295777 is prime!
+The number 333477 is not prime!
+The number 225062 is not prime!
+The number 572195 is not prime!
+The number 278135 is not prime!
+The number 741877 is prime!
+The number 867978 is not prime!
+The number 981452 is not prime!
